@@ -14,7 +14,7 @@ def jouer_une_partie(reseau_neurones_principal: Reseau_neurones_principal) -> ND
     """Joue une partie complète et alimente le réseau en samples."""
 
     ## initialisation de la partie
-    #raise NotImplementedError("initialisation pas implementé !!!")
+    raise NotImplementedError("initialisation pas implementé !!!")
 
     samples_1_partie = np.zeros((0, TAILLE_SAMPLE), dtype=np.float32)
 
