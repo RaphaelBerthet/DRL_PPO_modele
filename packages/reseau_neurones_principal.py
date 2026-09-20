@@ -145,6 +145,19 @@ class Reseau_neurones_principal:
                 dB2 *= facteur
                 dB3 *= facteur
 
+            if self.t_adam % 1000 == 0:
+                print()
+                print(
+                f"Vcurr [{np.min(V_curr):.3f}, {np.mean(V_curr):.3f}, {np.max(V_curr):.3f}] | "
+                f"Vnext [{np.min(V_next):.3f}, {np.mean(V_next):.3f}, {np.max(V_next):.3f}] | "
+                f"Grad {norme:.3f}")
+                print(
+                f"Reward [{np.min(rewards_batch):.3f}, "
+                f"{np.mean(rewards_batch):.3f}, "
+                f"{np.max(rewards_batch):.3f}]"
+                )
+                print()
+
             # --- 4. Mise à jour des poids ---
             self.t_adam += 1
             adam_update(self.w1, dW1, self.mW1, self.vW1, self.t_adam, learning_rate)
