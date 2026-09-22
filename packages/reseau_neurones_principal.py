@@ -64,7 +64,7 @@ class Reseau_neurones_principal:
             # --- 1. Extraction des données du batch ---
             states_batch = selection[:, :self.TAILLE_STATE]
             states2_batch = selection[:, self.TAILLE_STATE:self.TAILLE_STATE * 2]            
-            actions_batch = selection[:, self.TAILLE_STATE * 2].astype(np.int64) - 1
+            actions_batch = selection[:, self.TAILLE_STATE * 2].astype(np.int64)
             rewards_batch = selection[:, self.TAILLE_STATE * 2 + 1]
             prob_old_batch = selection[:, self.TAILLE_STATE * 2 + 2]
             terminal_state_batch = selection[:, self.TAILLE_STATE * 2 + 3]
