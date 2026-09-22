@@ -1,8 +1,7 @@
 from packages.build_state import build_state
 from packages.reseau_neurones_principal import Reseau_neurones_principal
 from packages.reseau_neurones_V_estimate import Reseau_neurones_V_estimate
-from packages.parametres_reseau_principal import TAILLE_STATE, NB_PARTIES, PERIODE_EXPORTATION, PERIODE_ENTRAINEMENT_P, gamma
-from packages.parametres_V_estimate import PERIODE_ENTRAINEMENT_V
+from packages.parametres_reseau_principal import TAILLE_STATE, NB_PARTIES, PERIODE_EXPORTATION, PERIODE_ENTRAINEMENT, gamma
 import random
 import numpy as np
 from numpy.typing import NDArray
@@ -32,13 +31,8 @@ def jouer_une_partie(reseau_neurones_principal: Reseau_neurones_principal) -> ND
 
 def choisir_action(reseau_neurones_principal: Reseau_neurones_principal, state: NDArray[np.float32]) -> tuple[int, float]:
     A3 = reseau_neurones_principal.calcul_couche_sortie(state)
-    choix = random.random()
-    cumsum = 0.0
-    for i in range(len(A3)):
-        cumsum += A3[i]
-        if choix < cumsum:
-            return i + 1, A3[i]
-    return len(A3), A3[-1]  # filet de sécurité pour erreurs d'arrondi flottant
+    action = np.random.choice(len(A3), p=A3)
+    return action, A3[action]
 
 def executer_action(action: int) -> tuple[float, bool]:
     raise NotImplementedError("executer action pas implementé")
@@ -51,6 +45,7 @@ def entrainer(nb_parties: int=NB_PARTIES):
     samples_P = np.zeros((0, TAILLE_SAMPLE), dtype=np.float32)
     samples_V = np.zeros((0, TAILLE_STATE + 2), dtype=np.float32)
     reseau_neurones_V_estimate_old = copy.deepcopy(reseau_neurones_V_estimate)
+    nb_entrainements = 0
 
     for partie in range(nb_parties):
         new_samples = jouer_une_partie(reseau_neurones_principal)
@@ -70,15 +65,16 @@ def entrainer(nb_parties: int=NB_PARTIES):
         )
         samples_V = np.concatenate([samples_V, new_samples_V], axis=0)
 
-        if partie % PERIODE_ENTRAINEMENT_P == 0 and partie != 0:
+        if len(samples_P) >= PERIODE_ENTRAINEMENT:
+            nb_entrainements += 1
             reseau_neurones_principal.entrainement_reseau(samples_P, reseau_neurones_V_estimate)
             samples_P = np.zeros((0, TAILLE_SAMPLE), dtype=np.float32)
-        if partie % PERIODE_ENTRAINEMENT_V == 0 and partie != 0:
             reseau_neurones_V_estimate.entrainement_reseau(samples_V)
             samples_V = np.zeros((0, TAILLE_STATE + 2), dtype=np.float32)
             reseau_neurones_V_estimate_old = copy.deepcopy(reseau_neurones_V_estimate)
 
-        if partie % PERIODE_EXPORTATION == 0 and partie != 0:
+        if nb_entrainements >= PERIODE_EXPORTATION:
+            nb_entrainements = 0
             print(f"progression : {partie * 100 / nb_parties} %")
             reseau_neurones_principal.export_reseau()
             reseau_neurones_V_estimate.export_reseau()

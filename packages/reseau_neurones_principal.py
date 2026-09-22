@@ -34,7 +34,7 @@ class Reseau_neurones_principal:
         except FileNotFoundError:
             self.w1 = (np.random.randn(self.NB_NEURONES_LAYER1, self.TAILLE_STATE) * np.sqrt(2 / self.TAILLE_STATE)).astype(np.float32)  # He init pour ReLU
             self.w2 = (np.random.randn(self.NB_NEURONES_LAYER2, self.NB_NEURONES_LAYER1) * np.sqrt(2 / self.NB_NEURONES_LAYER1)).astype(np.float32)
-            self.w3 = (np.random.randn(self.NB_ACTIONS_POSSIBLE, self.NB_NEURONES_LAYER2) * np.sqrt(2 / self.NB_NEURONES_LAYER2)).astype(np.float32)
+            self.w3 = (np.random.randn(self.NB_ACTIONS_POSSIBLE, self.NB_NEURONES_LAYER2) * 0.01).astype(np.float32)            
             self.b1 = np.zeros(self.NB_NEURONES_LAYER1, dtype=np.float32)
             self.b2 = np.zeros(self.NB_NEURONES_LAYER2, dtype=np.float32)
             self.b3 = np.zeros(self.NB_ACTIONS_POSSIBLE, dtype=np.float32)
