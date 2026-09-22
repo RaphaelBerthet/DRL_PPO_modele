@@ -13,3 +13,4 @@ MAX_NORME_GRADIENT = 0.5  # norme 2
 DELTA_HUBER_LOSS = 1
 PERIODE_ENTRAINEMENT = 1000  # nb de steps entre chaque entrainement
 PERIODE_EXPORTATION = 100  # .. entrainements
+GAE_LAMBDA = 0.95
