@@ -130,18 +130,21 @@ class Reseau_neurones_principal:
                 dB2 *= facteur
                 dB3 *= facteur
 
-            '''if self.t_adam % 1000 == 0:
-                print()
-                print(
-                f"Vcurr [{np.min(V_curr):.3f}, {np.mean(V_curr):.3f}, {np.max(V_curr):.3f}] | "
-                f"Vnext [{np.min(V_next):.3f}, {np.mean(V_next):.3f}, {np.max(V_next):.3f}] | "
-                f"Grad {norme:.3f}")
-                print(
-                f"Reward [{np.min(rewards_batch):.3f}, "
-                f"{np.mean(rewards_batch):.3f}, "
-                f"{np.max(rewards_batch):.3f}]"
-                )
-                print()'''
+                if self.t_adam % 1000 == 0:
+                    taux_clip = np.mean(mask_clip)
+                    print()
+                    print(
+                        f"Ratio [{np.min(ratio):.3f}, {np.mean(ratio):.3f}, {np.max(ratio):.3f}] | "
+                        f"Clippé : {taux_clip*100:.1f}%"
+                    )
+                    print(
+                        f"Advantage [{np.min(advantages):.3f}, {np.mean(advantages):.3f}, {np.max(advantages):.3f}]"
+                    )
+                    print(
+                        f"Entropie [{np.min(entropie):.3f}, {np.mean(entropie):.3f}, {np.max(entropie):.3f}] | "
+                        f"Grad {norme:.3f}"
+                    )
+                    print()
 
             # --- 4. Mise à jour des poids ---
             self.t_adam += 1
